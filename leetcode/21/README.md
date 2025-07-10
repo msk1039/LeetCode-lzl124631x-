@@ -97,3 +97,40 @@ public:
     }
 };
 ```
+
+## My Solution
+```cpp
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode* current1 = list1;
+        ListNode* current2 = list2;
+        ListNode* head = new ListNode();
+        ListNode* headCurrent = head;
+        while(current1!=nullptr && current2!=nullptr ){
+            if(current1->val <= current2->val){
+                headCurrent->next = current1;
+                current1=current1->next;
+                headCurrent=headCurrent->next;
+            }else{
+                headCurrent->next = current2;
+                current2=current2->next;
+                headCurrent=headCurrent->next;
+            }
+        }
+        while(current1){
+           headCurrent->next = current1;
+                current1=current1->next;
+                headCurrent=headCurrent->next;
+        }   
+        while(current2){
+             headCurrent->next = current2;
+                current2=current2->next;
+                headCurrent=headCurrent->next;
+        }
+        head=head->next;
+        return head;
+    }
+};
+
+```

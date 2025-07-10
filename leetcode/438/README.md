@@ -115,3 +115,76 @@ public:
     }
 };
 ```
+
+
+## My Solution 1
+
+```cpp
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+    int s_len = s.length();
+    int p_len = p.length();
+    if (s_len < p_len) return {};
+
+    vector<int> freq_p(26, 0), window(26, 0);
+    for (int i = 0; i < p_len; i++) {
+        freq_p[p[i] - 'a']++;
+        window[s[i] - 'a']++;
+    }
+
+    int match = 0;
+    for (int i = 0; i < 26; i++) {
+        if (freq_p[i] == window[i]) match++;
+    }
+
+    vector<int> ans;
+    if (match == 26) ans.push_back(0);
+
+    for (int i = p_len; i < s_len; i++) {
+        int left = s[i - p_len] - 'a';
+        int right = s[i] - 'a';
+
+        // Remove left character from window
+        if (window[left] == freq_p[left]) match--;
+        window[left]--;
+        if (window[left] == freq_p[left]) match++;
+
+        // Add right character to window
+        if (window[right] == freq_p[right]) match--;
+        window[right]++;
+        if (window[right] == freq_p[right]) match++;
+
+        if (match == 26) ans.push_back(i - p_len + 1);
+    }
+
+    return ans;
+}
+};
+```
+
+### 🔁 Sliding Window with Frequency Count & Match Counter
+
+General Idea:
+Use a fixed-size sliding window to track character frequencies and compare them efficiently with a reference (like a pattern). Instead of comparing full frequency arrays, maintain a match counter to track how many characters match exactly.
+
+###### When to Use:
+✅ Finding anagrams
+✅ Checking permutations in a string
+✅ Matching substrings with specific character frequency constraints
+✅ Problems with: “window of length k”, “anagram”, or “same characters in different order”
+
+⸻
+
+###### Optimized Algorithm Steps:
+	1.	Count character frequency of pattern p in freq_p[26].
+	2.	Initialize a window of size p.size() in s, count its frequency in window[26].
+	3.	Compute match = number of chars where freq_p[i] == window[i].
+	4.	Slide the window:
+	•	Remove left char, update match accordingly.
+	•	Add right char, update match accordingly.
+	•	If match == 26, record index.
+
+Time: O(n), Space: O(1)
+
+⸻
